@@ -2,50 +2,34 @@ const { expect } = require('chai')
 const userController = require('../src/controllers/user')
 const db = require('../src/dbClient')
 
-describe('User', () => {
-  beforeEach(() => {
-    db.flushdb()
-  })
+describe('User Controller', () => {
+  beforeEach(() => db.flushdb())
 
   describe('Create', () => {
     it('create a new user', (done) => {
-      const user = {
-        username: 'shm0m',
-        firstname: 'Shaima',
-        lastname: 'DEROUICH'
-      }
+      const user = { username: 'john', firstname: 'John', lastname: 'Doe' }
       userController.create(user, (err, result) => {
         expect(err).to.be.equal(null)
-        expect(result).to.be.equal('OK')
+        expect(result).to.equal('OK')
         done()
       })
     })
 
     it('passing wrong user parameters', (done) => {
-      const user = {
-        firstname: 'Shaima',
-        lastname: 'DEROUICH'
-      }
-      userController.create(user, (err, result) => {
-        expect(err).to.not.be.equal(null)
-        expect(result).to.be.equal(null)
+      const bad = { firstname: 'No', lastname: 'Username' }
+      userController.create(bad, (err, result) => {
+        expect(err).to.not.be.null
+        expect(result).to.be.null
         done()
       })
     })
 
     it('avoid creating an existing user', (done) => {
-      const user = {
-        username: 'shm0m',
-        firstname: 'Shaima',
-        lastname: 'DEROUICH'
-      }
-      userController.create(user, (err, result) => {
-        expect(err).to.be.equal(null)
-        expect(result).to.be.equal('OK')
-
+      const user = { username: 'john', firstname: 'John', lastname: 'Doe' }
+      userController.create(user, () => {
         userController.create(user, (err2, result2) => {
-          expect(err2).to.not.be.equal(null)
-          expect(result2).to.be.equal(null)
+          expect(err2).to.not.be.null
+          expect(result2).to.be.null
           done()
         })
       })
@@ -54,33 +38,23 @@ describe('User', () => {
 
   describe('Get', () => {
     it('get a user by username', (done) => {
-      const user = {
-        username: 'skibidiohiobased',
-        firstname: 'John',
-        lastname: 'Pork'
-      }
-      // 1. create user
+      const user = { username: 'alice', firstname: 'Alice', lastname: 'Wonder' }
       userController.create(user, (err, result) => {
-        expect(err).to.be.equal(null)
-        expect(result).to.be.equal('OK')
+        expect(err).to.be.null
+        expect(result).to.equal('OK')
 
-        // 2. retrieve user
-        userController.get('skibidiohiobased', (err2, found) => {
-          expect(err2).to.be.equal(null)
-          expect(found).to.include({
-            username: 'skibidiohiobased',
-            firstname: 'John',
-            lastname: 'Pork'
-          })
+        userController.get('alice', (err2, found) => {
+          expect(err2).to.be.null
+          expect(found).to.include(user)
           done()
         })
       })
     })
 
     it('cannot get a user when it does not exist', (done) => {
-      userController.get('no_such_user', (err, result) => {
-        expect(err).to.not.be.equal(null)
-        expect(result).to.be.equal(null)
+      userController.get('ghost', (err, result) => {
+        expect(err).to.not.be.null
+        expect(result).to.be.null
         done()
       })
     })
