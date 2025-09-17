@@ -15,6 +15,9 @@ Continuous testing
 Installation instructions:
 
 - **Windows:** https://redis.com/ebook/appendix-a/a-3-installing-on-windows/a-3-2-installing-redis-on-window/
+- **Windows 11:**
+https://redis.io/docs/latest/operate/oss_and_stack/install/archive/install-redis/install-redis-on-windows/
+
 - **MacOS:** `brew install redis` or https://redis.io/topics/quickstart
 - **Linux or MacOS:** https://redis.io/topics/quickstart
 
@@ -65,13 +68,13 @@ Create a REST API GET `user` method that retrieves user information from the dat
 
 > Hint. The source code of the example application in the folder `lab` contains `TODO` comments in the places where you are supposed to make modifications to accomplish these steps.
 
-1) Create `get` user controller:   
+1) Create `get` user controller:
   - Create **2 unit tests** (in the file `lab/test/user.controller.js`):
     - get a user by username
     - cannot get a user when it does not exist
   - Create **the controller method** (in the file `lab/src/controllers/user.js`)
 
-2) Create GET user REST API method:   
+2) Create GET user REST API method:
   - Create **2 API tests** (in the file `lab/test/user.router.js`):
     - successfully get user
     - cannot get a user when it does not exist
