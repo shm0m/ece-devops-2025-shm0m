@@ -29,5 +29,15 @@ jobs:
         with:
           node-version: 18
 
-      - run: npm install
-      - run: npm test
+      - name: Install deps
+        run: |
+          cd 04/05.continuous-testing
+          npm install
+
+      - name: Check Redis
+        run: redis-cli -h 127.0.0.1 -p 6379 ping
+
+      - name: Run tests
+        run: |
+          cd 04/05.continuous-testing
+          npm test
