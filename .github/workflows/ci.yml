@@ -31,10 +31,10 @@ jobs:
 
       - name: Install deps
         run: |
-          cd 04
+          cd modules/04
           npm install
 
       - name: Run tests
         run: |
-          cd 04
+          cd modules/04
           npm test
