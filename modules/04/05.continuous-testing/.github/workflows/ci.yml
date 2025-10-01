@@ -30,6 +30,8 @@ jobs:
           node-version: 18
 
       - run: npm install
+      - name: Check Redis
+        run: redis-cli -h 127.0.0.1 -p 6379 ping
       - run: npm test
 
       
