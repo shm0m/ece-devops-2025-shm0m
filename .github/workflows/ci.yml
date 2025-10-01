@@ -39,5 +39,7 @@ jobs:
 
       - name: Run tests
         run: |
-          cd 04/05.continuous-testing
+          cd 05.continuous-testing/
           npm test
+
+          
