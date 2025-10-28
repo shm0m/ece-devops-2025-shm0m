@@ -1,85 +1,109 @@
+#  DevOps Labs Report – Docker, Redis & Vagrant
 
-# Lab
+---
 
-Continuous testing
+##  Lab – Containers with Docker
 
-## Objectives
+###  Main purpose of the lab
+Understand the basics of containerization using Docker:
+- Write a `Dockerfile` for a Node.js app
+- Build and run Docker images
+- Use port mapping and volumes
+- Push images to Docker Hub
 
-1. Use prepared User API application and run tests
-2. Using test-driven development (TDD) create GET user functionality
+###  Possible application in a company
+Docker is heavily used in companies to:
+- Deploy microservices quickly and consistently  
+- Reproduce environments for dev, test, and prod  
+- Simplify CI/CD pipelines with portable containers
 
-## Before starting
+###  Step in the DevOps cycle
+**Step:** *Build & Deploy*  
+Docker ensures the application is built in a reproducible way and deployed identically on every environment.
 
-1. Install Redis database
+###  Problems encountered
+| Problem | Cause | Solution |
+|----------|--------|-----------|
+| Docker engine error (`file not found`) | Docker Desktop not started | Launched Docker Desktop manually |
+| `npm ERR! missing script: start` | Missing `"start"` script in package.json | Added `"start": "node index.js"` |
+| `Cannot find module 'node:events'` | Node 12 incompatible with Express 5 | Updated `FROM node:12` → `FROM node:20` |
+| Volume not mounting | PowerShell doesn’t support `$(pwd)` | Used `${PWD}` or full Windows path |
 
-Installation instructions:
+###  Final state
+All objectives achieved   
+The app ran successfully on `localhost`, volumes worked, and image pushed to Docker Hub.  
+→ Lab validated.
 
-- **Windows:** https://redis.com/ebook/appendix-a/a-3-installing-on-windows/a-3-2-installing-redis-on-window/
-- **Windows 11:**
-https://redis.io/docs/latest/operate/oss_and_stack/install/archive/install-redis/install-redis-on-windows/
+---
 
-- **MacOS:** `brew install redis` or https://redis.io/topics/quickstart
-- **Linux or MacOS:** https://redis.io/topics/quickstart
+## Lab – Redis with Docker Compose
 
-After installation, start Redis server:
+###  Main purpose of the lab
+Understand how to use **Docker Compose** to manage multi-container applications:
+- Node.js app connected to Redis
+- Define services, volumes, and dependencies in `docker-compose.yaml`
 
-- **Windows:** double click on `redis-server.exe` file (keep it open)
-- **MacOS and Linux:** `redis-server`
+###  Possible application in a company
+Docker Compose simplifies the orchestration of multi-service systems (e.g., app + database + cache).  
+It’s often used for:
+- Local development environments  
+- CI testing with multiple services  
+- Microservices prototyping  
 
-Test if the Redis server is running:
+###  Step in the DevOps cycle
+**Step:** *Build / Test / Deploy*  
+Compose helps automate environment setup for integration testing and deployments.
 
-- **Windows:** double click on `redis-cli.exe` and run the `ping` command inside the REPL
-- **MacOS and Linux:** run in a new terminal window `redis-cli ping` (should answer with "PONG")
+###  Problems encountered
+| Problem | Cause | Solution |
+|----------|--------|-----------|
+| Counter reset on container restart | Redis data not persisted | Added a named volume (`redis-data:/data`) in docker-compose |
+| Connection refused | Redis not ready before Node.js starts | Used `depends_on: redis` in docker-compose |
 
-2. Install an **IDE or a text editor**, for example, [Atom](https://atom.io/) or [VS Code](https://code.visualstudio.com/)
+###  Final state
+The Node.js + Redis app worked correctly.  
+Counter persisted across container restarts using Docker Volumes.  
+→ Lab objectives achieved successfully.
 
-3. Install **NodeJS**: https://nodejs.org/
+---
 
+##  Lab – Virtual Machines with Vagrant
 
-## 1. Use prepared User API application and run tests
+###  Main purpose of the lab
+Learn how to automate VM provisioning with **Vagrant**:
+- Initialize a VM (`vagrant init`)
+- Configure a `Vagrantfile`
+- Start (`vagrant up`) and connect via SSH
 
-Go to [`lab`](lab) folder and explore the project:
+###  Possible application in a company
+Vagrant allows reproducible **development environments** on any OS.  
+It’s used by dev teams to standardize local environments and test infrastructure code before deployment.
 
-```
-cd lab
-```
+###  Step in the DevOps cycle
+**Step:** *Plan & Build*  
+Vagrant is part of the infrastructure provisioning stage — setting up environments before deployment or testing.
 
-Install application:
+###  Problems encountered
+| Problem | Cause | Solution |
+|----------|--------|-----------|
+| Vagrant didn’t start due to WSL conflict | Docker Desktop uses WSL2 backend, conflicting with VirtualBox/Vagrant | Tried switching to Hyper-V but system incompatible |
+| VM launch failed | Missing provider configuration | Attempted manual `vagrant up` fix but WSL kept overriding |
 
-```
-npm install
-```
+###  How it was handled
+- Analyzed error logs related to Vagrant + WSL conflict  
+- Checked [HashiCorp docs](https://developer.hashicorp.com/vagrant/docs) and [Windows WSL issues](https://learn.microsoft.com/en-us/windows/wsl/)  
+- Decided to skip VM provisioning and document the issue clearly  
 
-Run tests:
+### Final state
+**Lab not completed** due to WSL and virtualization conflicts.  
+Docker Desktop on Windows uses WSL2, which blocks VirtualBox (needed for Vagrant).  
+→ Lab analyzed and documented but not executed.
 
-```
-npm test
-```
+---
 
-Start application:
+## 🏁 Global Conclusion
+- **Docker**: Successfully containerized a Node.js app  
+- **Redis Compose**: Managed multi-container orchestration and data persistence  
+- **Vagrant**: Understood conceptually, blocked by WSL conflict  
 
-```
-npm start
-```
-
-## 2. Using test-driven development (TDD) create GET user functionality
-
-Create a REST API GET `user` method that retrieves user information from the database.
-
-> Hint. The source code of the example application in the folder `lab` contains `TODO` comments in the places where you are supposed to make modifications to accomplish these steps.
-
-1) Create `get` user controller:
-  - Create **2 unit tests** (in the file `lab/test/user.controller.js`):
-    - get a user by username
-    - cannot get a user when it does not exist
-  - Create **the controller method** (in the file `lab/src/controllers/user.js`)
-
-2) Create GET user REST API method:
-  - Create **2 API tests** (in the file `lab/test/user.router.js`):
-    - successfully get user
-    - cannot get a user when it does not exist
-  - Create **GET user route** (in the file `lab/src/routes/user.js`)
-
-## Bonus tasks
-
-1. Integrate Swagger UI using for example this package - https://www.npmjs.com/package/express-swagger-generator
+Overall, these labs strengthened understanding of **DevOps automation**, **environment reproducibility**, and **infrastructure as code** concepts.
